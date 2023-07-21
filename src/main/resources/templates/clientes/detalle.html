@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+<head>
+<meta charset="UTF-8">
+<title>JCUBA</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+<link rel="stylesheet" type="text/css" th:href="@{/css/sidebard.css}">
+</head>
+<body>
+	<div th:replace="fragments/sidebar :: sidebar" id="body-pd"></div>
+	<div class="container py-4">
+		<div class="card">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 sec:authorize="hasRole('ROLE_ADMIN')" class="card-title">
+					<a class="btn btn-outline-primary btn-xs" th:href="@{/venta/formulario/} + ${cliente.id}">Nueva Venta</a>
+				</h4>
+				<ul class="list-group">
+					<li class="list-group-item" th:text="'Nombre(s): ' + ${cliente.nombre}"></li>
+					<li class="list-group-item" th:text="'Apellidos: ' + ${cliente.apellidos}"></li>
+					<li class="list-group-item" th:text="'Email: ' + ${cliente.email}"></li>
+					<li class="list-group-item" th:text="'F. Registro: ' + ${cliente.fechaCreacion}"></li>
+				</ul>
+				<table class="table  table-hover mt-3 table-bordered" th:if="${not #lists.isEmpty(cliente.ventas)}">
+				<thead class="table-dark">
+					<tr>
+						<th class="text-center">ID</th>
+						<th class="text-center">Descripción</th>
+						<th class="text-center">Observación</th>
+						<th class="text-center">F. Venta</th>
+						<th class="text-center">Total (S/)</th>
+						<th sec:authorize="hasRole('ROLE_ADMIN')" class="text-center">Eliminar</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="venta: ${cliente.ventas}">
+						<td class="text-center"><a class="btn btn-outline-warning" th:href="@{/venta/detalle/} + ${venta.id}"
+						th:text="${venta.id}"></a></td>
+						<td class="text-center" th:text="${venta.descripcion}"></td>
+						<td class="text-center" th:text="${venta.observacion}"></td>
+						<td class="text-center" th:text="${venta.fechaCreacion}"></td>
+						<td class="text-center" th:text="'S/ ' + ${venta.calcularTotal()}"></td>
+						<td sec:authorize="hasRole('ROLE_ADMIN')" class="text-center">
+							<a class="btn btn-outline-danger"
+								th:onclick="eliminarVenta([[${venta.id}]])"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+  								<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+								</svg>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" th:src="@{/js/jquery-3.6.0.js}"></script>
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script type="text/javascript" th:src="@{/js/funciones.js}"></script>
+</body>
+</html>
